@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+<header>
+    <% include ../partials/header %>
+    <link rel="stylesheet" href="/css/justifiedGallery.css"/>
+</header>
+
+<main>
+    <h1><%= title %></h1>
+    <div id="route_stops">
+        <% for (var i = 0; i < stops.length; i++) { var stop = stops[i]; %>
+        <div title="<%= stop['Name'] %>">
+            <input type="checkbox" value="<%= stop['Code'] %>" id="route<%= stop['Id'] %>"
+                   name="route<%= stop['Id'] %>"/>
+            <label for="route<%= stop['Id'] %>"><span></span><%= stop['Name'] %></label>
+        </div>
+        <% } %>
+    </div>
+
+    <div class="container">
+        <div id="map_container"></div>
+        <div id="map"></div>
+    </div>
+
+</main>
+
+<footer>
+    <% include ../partials/footer %>
+</footer>
+
+</body>
+</html>

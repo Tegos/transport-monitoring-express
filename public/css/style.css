@@ -1,0 +1,34 @@
+#map_container {
+    position: relative;
+}
+
+#map {
+    height: 0;
+    overflow: hidden;
+    padding-bottom: 22.25%;
+    position: relative;
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+body {
+    background-color: #40464b;
+}
+
+main h1 {
+    color: white;
+    text-align: center;
+}
+
+#route_stops div {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+#route_stops div label {
+    user-select: none;
+}
