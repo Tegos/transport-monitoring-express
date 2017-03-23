@@ -17,6 +17,7 @@ router.get('/about', function (req, res, next) {
 /* GET home page. */
 router.get('/', function (req, res, next) {
     var view_data = {title: 'ExpressRouteMap Lviv'};
+
     var buses = Model.getBuses();
 
     buses.then(function (response) {

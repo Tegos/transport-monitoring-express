@@ -13,6 +13,7 @@ var Model = {
     },
     getRoutes: function (code) {
         var urlRoute = apiUrl.getRouteUrl(code);
+        //console.log(urlRoute);
 
         return requestify.get(urlRoute);
     }

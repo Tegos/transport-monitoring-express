@@ -3,43 +3,68 @@
  */
 
 
+
 var defaultUpdate = function (data) {
 
-    map.clearMarkers();
+    //mapUtil.deleteMarkers();
+    var markers = mapUtil.getMarkers();
+
+    var newPositionMarker = [];
 
     data.forEach(function (route) {
+        //console.log(route);
         var x = route.X;
         var y = route.Y;
-        var imagePath = 'http://m.schuepfen.ch/icons/helveticons/black/60/Pin-location.png';
-        var myLatlng = new google.maps.LatLng(y, x);
+        var busId = route.VehicleId;
 
-        //Add Marker
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            icon: imagePath,
-            title: 'image title'
-        });
+        var nameRoute = route.RouteName;
 
-        console.log(data);
-        console.log(y);
+        var BusNumber = route.VehicleName;
+
+        var positionBus = new google.maps.LatLng(y, x);
+
+        console.log(busId);
+        console.log(mapUtil.isMarkerOnMap(busId));
+        // exist on map -> need move
+        if (mapUtil.isMarkerOnMap(busId)) {
+            var marker = mapUtil.getMarkerById(busId);
+            mapUtil.moveMarker(marker, positionBus);
+
+        } else { // need create
+
+            var contentString = 'Маршрут: <b>' + nameRoute + '</b><br/>' + 'ТЗ: <b>' + BusNumber + '</b>';
+            //Set window width + content
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 500
+            });
+
+            mapUtil.addMarker(positionBus, busId, infowindow);
+            // //Add Marker
+            // var marker = new google.maps.Marker({
+            //     position: myLatlng,
+            //     map: map,
+            //     icon: imagePath,
+            //     title: 'image title'
+            // });
+
+            // google.maps.event.addListener(marker, 'click', function () {
+            //     infowindow.open(map, marker);
+            // });
+        }
+
+        //console.dir(data);
     });
 
 };
 
-$(document).ready(function () {
+var getNewBus = function (data) {
 
-    //Google Maps JS
-    //Set Map
-    function initialize909() {
+    data.forEach(function (route) {
+        var x = route.X;
+        var y = route.Y;
 
-
-        var mapOptions = {
-            zoom: 11,
-            center: myLatlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-
+        var positionBus = new google.maps.LatLng(y, x);
 
         //Callout Content
         var contentString = 'Some address here..';
@@ -49,23 +74,20 @@ $(document).ready(function () {
             maxWidth: 500
         });
 
-        //Add Marker
-        var marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            icon: imagePath,
-            title: 'image title'
-        });
+        mapUtil.addMarker(positionBus);
+        // //Add Marker
+        // var marker = new google.maps.Marker({
+        //     position: myLatlng,
+        //     map: map,
+        //     icon: imagePath,
+        //     title: 'image title'
+        // });
 
-        google.maps.event.addListener(marker, 'click', function () {
-            infowindow.open(map, marker);
-        });
+        // google.maps.event.addListener(marker, 'click', function () {
+        //     infowindow.open(map, marker);
+        // });
 
-        //Resize Function
-        google.maps.event.addDomListener(window, "resize", function () {
-            var center = map.getCenter();
-            google.maps.event.trigger(map, "resize");
-            map.setCenter(center);
-        });
-    }
-});
+        //console.dir(data);
+    });
+
+};

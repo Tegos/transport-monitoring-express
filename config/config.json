@@ -1,6 +1,6 @@
 {
   "port": 3000,
-  "defaultUpdate": 15000,
+  "defaultUpdate": 10000,
   "api": {
     "url": "http://82.207.107.126:13541/SimpleRIDE/LAD/SM.WebApi/api/"
   },

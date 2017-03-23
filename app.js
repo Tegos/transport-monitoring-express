@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var uniqueArray = require('array-unique');
 
 var router = require('./routes');
 var Model = require('./models/model');
@@ -54,33 +55,105 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-var bus_code = 0;
+var socketDataClients = [];
+var allBuses = [];
+var allClients = [];
 
 //start listen with socket.io
 app.io.on('connection', function (socket) {
-    console.log('new user connected');
-    socket.on('new-bus', function (bus_id) {
-        console.log('new-bus: ' + bus_id);
-        bus_code = bus_id;
+    socketDataClients[socket.id] = [];
+
+    // add bus
+    socket.on('add-bus', function (bus_id) {
+        console.log('add-bus');
+        allBuses.push(bus_id);
+        allBuses = uniqueArray(allBuses);
+
+        socketDataClients[socket.id].push(bus_id);
+        socketDataClients[socket.id] = uniqueArray(socketDataClients[socket.id]);
+
+        // var routeDataProm = Model.getRoutes(bus_id);
+        //
+        // routeDataProm.then(function (response) {
+        //         var content = response.getBody();
+        //         var routeData = JSON.parse(content);
+        //         app.io.emit('getNewBus', routeData);
+        //     }
+        // );
     });
+
+    // remove bus
+    socket.on('remove-bus', function (bus_id) {
+        console.log('remove-bus');
+
+        var socket_buses = socketDataClients[socket.id];
+        socket_buses = socket_buses.filter(function (item) {
+            return item !== bus_id;
+        });
+
+        socketDataClients[socket.id] = socket_buses;
+    });
+
+    // disconnect
+    socket.on('disconnect', function () {
+        delete socketDataClients[socket.id];
+    });
+
 });
 
-
+// defaultUpdate every time
 var intervalDefaultUpdate = setInterval(function () {
+//var intervalDefaultUpdate = setTimeout(function () {
     console.log('defaultUpdate');
+    console.log(allBuses);
+    //console.log(allBuses);
+
+    allBuses.forEach(function (bus_code) {
+        console.log('Code: ' + bus_code);
+        var routeDataProm = Model.getRoutes(bus_code);
+
+        routeDataProm.then(function (response) {
+                var content = response.getBody();
+                var routeData = JSON.parse(content);
+
+                for (var socket_id in socketDataClients) {
+                    var array_buses = socketDataClients[socket_id];
+
+                    if (array_buses.indexOf(bus_code) > -1) {
+                        console.log('909');
+                        app.io.sockets.sockets[socket_id].emit('defaultUpdate', routeData);
+                    } else {
+                        app.io.sockets.sockets[socket_id].emit('defaultUpdate', []);
+                    }
+                }
 
 
-    var routeDataProm = Model.getRoutes('C2|712989');
+            }
+        );
+    });
 
-    routeDataProm.then(function (response) {
-            var content = response.getBody();
-            var routeData = JSON.parse(content);
-            app.io.emit('defaultUpdate', routeData);
-        }
-    );
+    //console.log(socketDataClients);
 
 
 }, app.config.get('defaultUpdate'));
 
 
 module.exports = app;
+
+
+// check if an element exists in array using a comparer function
+// comparer : function(currentElement)
+Array.prototype.inArray = function (comparer) {
+    for (var i = 0; i < this.length; i++) {
+        if (comparer(this[i])) return true;
+    }
+    return false;
+};
+
+// adds an element to the array if it does not already exist using a comparer
+// function
+Array.prototype.pushIfNotExist = function (element, comparer) {
+    if (!this.inArray(comparer)) {
+        this.push(element);
+    }
+};
