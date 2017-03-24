@@ -1,6 +1,6 @@
 {
-  "name": "express.js",
-  "version": "0.0.1",
+  "name": "LvivTransportMonitoringExpress",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -13,7 +13,7 @@
     "debug": "~2.6.0",
     "ejs": "~2.5.5",
     "express": "~4.14.1",
-    "mongoose": "^4.8.6",
+    "hammerjs": "^2.0.8",
     "morgan": "~1.7.0",
     "nconf": "latest",
     "node-uuid": "latest",
@@ -21,7 +21,6 @@
     "requestify": "^0.2.5",
     "serve-favicon": "~2.3.2",
     "socket.io": "^1.7.3",
-    "string": "~1.7.0",
     "validator": "~2.0.0"
   }
 }

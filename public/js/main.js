@@ -3,17 +3,11 @@
  */
 
 $(document).ready(function () {
-
     var socket = io();
 
     // defaultUpdate
     socket.on('defaultUpdate', function (data, code) {
         defaultUpdate(data, code);
-    });
-
-    // get new  bus
-    socket.on('getNewBus', function (data) {
-        getNewBus(data);
     });
 
     // draw route path
@@ -31,6 +25,22 @@ $(document).ready(function () {
             socket.emit('remove-bus', code);
             eventRemoveRoute(code);
         }
+    });
+
+
+    var menu = document.getElementById('menu');
+    var hammer = new Hammer.Manager(menu);
+    var swipe = new Hammer.Swipe();
+
+    hammer.add(swipe);
+
+    hammer.on('swipeleft', function () {
+        console.log('left');
+        $(menu).animate({left: "-=100"}, 500);
+    });
+
+    hammer.on('swiperight', function () {
+        $(menu).animate({left: "+=100"}, 500);
     });
 
 

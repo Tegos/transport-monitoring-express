@@ -46,7 +46,6 @@ $.fn.googleMap = function (options) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 map.setCenter(initialLocation);
-                console.log(position.coords);
             });
         } else {
             console.warn('No geo location');

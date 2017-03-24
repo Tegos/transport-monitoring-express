@@ -6,8 +6,7 @@
 
 var defaultUpdate = function (data, routeCode) {
 
-    var length_data = data.length;
-    console.log('L-data' + length_data);
+    //var length_data = data.length;
 
     data.forEach(function (route) {
         //console.log(route);

@@ -37,4 +37,15 @@ html, body {
     overflow-y: auto;
     overflow-x: hidden;
     text-overflow: ellipsis;
+
+    max-width: none;
+
+}
+
+.label-mobile {
+    display: none;
+}
+
+.label-desktop {
+    display: inline-block;
 }

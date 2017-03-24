@@ -32,6 +32,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// node_modules
+app.use('/scripts', express.static(path.join(__dirname, 'node_modules')));
 
 //define routes
 
@@ -108,7 +110,6 @@ var intervalDefaultUpdate = setInterval(function () {
 //var intervalDefaultUpdate = setTimeout(function () {
     console.log('defaultUpdate');
     //console.log(allBuses);
-    //console.log(allBuses);
 
     allBuses.forEach(function (route_code) {
         var routeDataProm = Model.getRoutes(route_code);
@@ -121,12 +122,9 @@ var intervalDefaultUpdate = setInterval(function () {
                     var array_buses = socketDataClients[socket_id];
 
                     if (array_buses.indexOf(route_code) > -1) {
-                        console.log('909');
                         app.io.sockets.sockets[socket_id].emit('defaultUpdate', routeData, route_code);
                     }
                 }
-
-
             }
         );
     });

@@ -5,6 +5,7 @@ var config = require('../config');
 var Model = require('../models/model');
 
 
+
 /* about page. */
 router.get('/about', function (req, res, next) {
     res.render('test',
@@ -21,7 +22,16 @@ router.get('/', function (req, res, next) {
 
     buses.then(function (response) {
             var content = response.getBody();
-            view_data.stops = JSON.parse(content);
+            var stops = JSON.parse(content);
+
+            stops.forEach(function (stop, key) {
+                var words = stop['Name'].split(" ");
+                stop['SmallName'] = words[0];
+                stops[key] = stop;
+            });
+
+            view_data.stops = stops;
+
 
             res.render('pages/index',
                 view_data
