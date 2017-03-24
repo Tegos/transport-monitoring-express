@@ -16,14 +16,19 @@ $(document).ready(function () {
         getNewBus(data);
     });
 
-    $("#route_stops").justifiedGallery({
-        selector: 'div',
-        rowHeight: 30,
-        maxRowHeight: 30,
-        lastRow: 'justify',
-        margins: 3,
-        caption: true
+    // draw route path
+    socket.on('drawRoute', function (data) {
+        drawRoute(data);
     });
+
+    // $("#route_stops").justifiedGallery({
+    //     selector: 'div',
+    //     rowHeight: 30,
+    //     maxRowHeight: 30,
+    //     lastRow: 'justify',
+    //     margins: 3,
+    //     caption: true
+    // });
 
     $("#route_stops input").change(function () {
         var t = $(this);
@@ -31,7 +36,7 @@ $(document).ready(function () {
         var checked = t.prop('checked');
         if (checked) {
             socket.emit('add-bus', code);
-        }else{
+        } else {
             socket.emit('remove-bus', code);
         }
     });

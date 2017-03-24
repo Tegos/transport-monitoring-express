@@ -1,34 +1,40 @@
-#map_container {
-    position: relative;
-}
-
-#map {
-    height: 0;
-    overflow: hidden;
-    padding-bottom: 22.25%;
-    position: relative;
-}
-
-.container {
+html, body {
+    height: 100%;
     width: 100%;
-    margin: 0 auto;
-}
-
-body {
     background-color: #40464b;
 }
 
-main h1 {
-    color: white;
-    text-align: center;
+.navbar-inverse {
+    background-color: rgba(0, 0, 0, .7);
 }
 
 #route_stops div {
     height: 30px;
     line-height: 30px;
-    text-align: center;
+    margin-left: 20px;
+    cursor: pointer;
 }
 
 #route_stops div label {
     user-select: none;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+
+#menu {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background-color: rgba(0, 0, 0, .9);
+    height: calc(100% - 50px);
+    max-height: calc(100% - 50px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }

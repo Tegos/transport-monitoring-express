@@ -10,6 +10,9 @@ var apiUrl = {
     },
     getRouteUrl: function (code) {
         return SimpleRIDE_URL + 'RouteMonitoring/?code=' + code;
+    },
+    getPathUrl: function (code) {
+        return SimpleRIDE_URL + 'path/?code=' + code;
     }
 };
 

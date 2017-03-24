@@ -18,13 +18,13 @@ var defaultUpdate = function (data) {
         var busId = route.VehicleId;
 
         var nameRoute = route.RouteName;
+        var angle = route.Angle;
 
         var BusNumber = route.VehicleName;
 
         var positionBus = new google.maps.LatLng(y, x);
 
-        console.log(busId);
-        console.log(mapUtil.isMarkerOnMap(busId));
+
         // exist on map -> need move
         if (mapUtil.isMarkerOnMap(busId)) {
             var marker = mapUtil.getMarkerById(busId);
@@ -39,7 +39,7 @@ var defaultUpdate = function (data) {
                 maxWidth: 500
             });
 
-            mapUtil.addMarker(positionBus, busId, infowindow);
+            mapUtil.addMarker(positionBus, busId, infowindow, angle);
             // //Add Marker
             // var marker = new google.maps.Marker({
             //     position: myLatlng,
@@ -90,4 +90,17 @@ var getNewBus = function (data) {
         //console.dir(data);
     });
 
+};
+
+var drawRoute = function (data) {
+    console.log(data);
+    var flightPlanCoordinates = [];
+
+    data.forEach(function (dataPath) {
+        flightPlanCoordinates.push(
+            new google.maps.LatLng(dataPath.Y, dataPath.X)
+        )
+    });
+
+    mapUtil.drawPath(flightPlanCoordinates);
 };

@@ -72,14 +72,16 @@ app.io.on('connection', function (socket) {
         socketDataClients[socket.id].push(bus_id);
         socketDataClients[socket.id] = uniqueArray(socketDataClients[socket.id]);
 
-        // var routeDataProm = Model.getRoutes(bus_id);
-        //
-        // routeDataProm.then(function (response) {
-        //         var content = response.getBody();
-        //         var routeData = JSON.parse(content);
-        //         app.io.emit('getNewBus', routeData);
-        //     }
-        // );
+        var routePathPromise = Model.getPathData(bus_id);
+
+        routePathPromise.then(function (response) {
+
+                var content = response.getBody();
+                var routePathData = JSON.parse(content);
+                console.log(routePathData);
+                app.io.sockets.sockets[socket.id].emit('drawRoute', routePathData);
+            }
+        );
     });
 
     // remove bus

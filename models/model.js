@@ -16,6 +16,11 @@ var Model = {
         //console.log(urlRoute);
 
         return requestify.get(urlRoute);
+    },
+    getPathData: function (code) {
+        var urlRoute = apiUrl.getPathUrl(code);
+
+        return requestify.get(urlRoute);
     }
 };
 
