@@ -12,6 +12,7 @@ router.get('/about', function (req, res, next) {
     );
 });
 
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     var view_data = {title: 'LvivTransportMonitoringExpress'};
