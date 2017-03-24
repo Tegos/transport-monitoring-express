@@ -4,12 +4,10 @@
 
 
 
-var defaultUpdate = function (data) {
+var defaultUpdate = function (data, routeCode) {
 
-    //mapUtil.deleteMarkers();
-    var markers = mapUtil.getMarkers();
-
-    var newPositionMarker = [];
+    var length_data = data.length;
+    console.log('L-data' + length_data);
 
     data.forEach(function (route) {
         //console.log(route);
@@ -39,18 +37,7 @@ var defaultUpdate = function (data) {
                 maxWidth: 500
             });
 
-            mapUtil.addMarker(positionBus, busId, infowindow, angle);
-            // //Add Marker
-            // var marker = new google.maps.Marker({
-            //     position: myLatlng,
-            //     map: map,
-            //     icon: imagePath,
-            //     title: 'image title'
-            // });
-
-            // google.maps.event.addListener(marker, 'click', function () {
-            //     infowindow.open(map, marker);
-            // });
+            mapUtil.addMarker(positionBus, busId, infowindow, angle, routeCode);
         }
 
         //console.dir(data);
@@ -58,49 +45,27 @@ var defaultUpdate = function (data) {
 
 };
 
-var getNewBus = function (data) {
-
-    data.forEach(function (route) {
-        var x = route.X;
-        var y = route.Y;
-
-        var positionBus = new google.maps.LatLng(y, x);
-
-        //Callout Content
-        var contentString = 'Some address here..';
-        //Set window width + content
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString,
-            maxWidth: 500
-        });
-
-        mapUtil.addMarker(positionBus);
-        // //Add Marker
-        // var marker = new google.maps.Marker({
-        //     position: myLatlng,
-        //     map: map,
-        //     icon: imagePath,
-        //     title: 'image title'
-        // });
-
-        // google.maps.event.addListener(marker, 'click', function () {
-        //     infowindow.open(map, marker);
-        // });
-
-        //console.dir(data);
-    });
-
-};
 
 var drawRoute = function (data) {
-    console.log(data);
     var flightPlanCoordinates = [];
 
-    data.forEach(function (dataPath) {
+    data.path.forEach(function (dataPath) {
         flightPlanCoordinates.push(
             new google.maps.LatLng(dataPath.Y, dataPath.X)
-        )
+        );
     });
 
-    mapUtil.drawPath(flightPlanCoordinates);
+    mapUtil.drawPath(flightPlanCoordinates, data.code);
 };
+
+var eventRemoveRoute = function (code_route) {
+
+    mapUtil.removePath(code_route);
+    mapUtil.deleteMarkers();
+
+};
+
+var eventAddRoute = function (code_route) {
+
+};
+

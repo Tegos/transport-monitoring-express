@@ -7,8 +7,8 @@ $(document).ready(function () {
     var socket = io();
 
     // defaultUpdate
-    socket.on('defaultUpdate', function (data) {
-        defaultUpdate(data);
+    socket.on('defaultUpdate', function (data, code) {
+        defaultUpdate(data, code);
     });
 
     // get new  bus
@@ -21,15 +21,6 @@ $(document).ready(function () {
         drawRoute(data);
     });
 
-    // $("#route_stops").justifiedGallery({
-    //     selector: 'div',
-    //     rowHeight: 30,
-    //     maxRowHeight: 30,
-    //     lastRow: 'justify',
-    //     margins: 3,
-    //     caption: true
-    // });
-
     $("#route_stops input").change(function () {
         var t = $(this);
         var code = t.val();
@@ -38,6 +29,7 @@ $(document).ready(function () {
             socket.emit('add-bus', code);
         } else {
             socket.emit('remove-bus', code);
+            eventRemoveRoute(code);
         }
     });
 

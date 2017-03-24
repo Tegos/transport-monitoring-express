@@ -66,11 +66,7 @@ function MapUtil(map) {
     var _this = this;
     this.map = map;
     var markers = [];
-
-    // This event listener will call addMarker() when the map is clicked.
-    map.addListener('click', function (event) {
-        _this.addMarker(event.latLng);
-    });
+    var paths = [];
 
     this.deleteMarkers = function () {
         for (var i = 0; i < markers.length; i++) {
@@ -80,9 +76,10 @@ function MapUtil(map) {
     };
 
     // Adds a marker to the map and push to the array.
-    this.addMarker = function (location, id, infoWindow, angle) {
+    this.addMarker = function (location, id, infoWindow, angle, routeCode) {
         var marker = new google.maps.Marker({
             id: id,
+            routeCode: routeCode,
             position: location,
             map: map
         });
@@ -135,10 +132,20 @@ function MapUtil(map) {
     };
 
     this.moveMarker = function (marker, newPosition) {
-        marker.animateTo(newPosition, {duration: 3000});
+        var start_position = marker.position;
+        var latLngStart = marker.getPosition();
+        //console.log(latLng);
+        var e = 0.00001;
+
+        if (Math.abs(latLngStart.lat() - newPosition.lat()) > e
+            || Math.abs(latLngStart.lng() - newPosition.lng()) > e
+        ) {
+            marker.animateTo(newPosition, {duration: 3000});
+        }
+
     };
 
-    this.drawPath = function (pathCoord) {
+    this.drawPath = function (pathCoord, code) {
         var color = colors[Math.floor(Math.random() * colors.length)];
         var mapPath = new google.maps.Polyline({
             zIndex: -100,
@@ -151,17 +158,36 @@ function MapUtil(map) {
         });
 
         mapPath.setMap(map);
+        paths[code] = mapPath;
     };
 
-    return this;
+    this.removePath = function (code) {
+        var mapPath = paths[code] || 0;
+        mapPath.setMap(null);
+    };
+
+    this.deleteMarkersByCode = function (code) {
+        for (var i = 0; i < markers.length; i++) {
+            var marker = markers[i];
+            var marker_code = marker.routeCode;
+            console.log(marker_code);
+            console.log(code);
+            if (marker_code == code) {
+                marker.setMap(null);
+                markers.splice(i, 1);
+            }
+        }
+    };
+
 }
 
 
 window.initMap = function () {
     mapCanvas = $('#map');
+
     map = mapCanvas.googleMap({
         zoom: 15,
-        center: {lat: 0, lng: 0},
+        center: {lat: 49.802829, lng: 24.00145},
         mapTypeId: google.maps.MapTypeId.TERRAIN,
         disableDefaultUI: true
     });

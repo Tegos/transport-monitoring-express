@@ -64,22 +64,22 @@ app.io.on('connection', function (socket) {
     socketDataClients[socket.id] = [];
 
     // add bus
-    socket.on('add-bus', function (bus_id) {
+    socket.on('add-bus', function (route_id) {
         console.log('add-bus');
-        allBuses.push(bus_id);
+        allBuses.push(route_id);
         allBuses = uniqueArray(allBuses);
 
-        socketDataClients[socket.id].push(bus_id);
+        socketDataClients[socket.id].push(route_id);
         socketDataClients[socket.id] = uniqueArray(socketDataClients[socket.id]);
 
-        var routePathPromise = Model.getPathData(bus_id);
+        var routePathPromise = Model.getPathData(route_id);
 
         routePathPromise.then(function (response) {
 
                 var content = response.getBody();
                 var routePathData = JSON.parse(content);
-                console.log(routePathData);
-                app.io.sockets.sockets[socket.id].emit('drawRoute', routePathData);
+                var data = {path: routePathData, code: route_id};
+                app.io.sockets.sockets[socket.id].emit('drawRoute', data);
             }
         );
     });
@@ -107,12 +107,11 @@ app.io.on('connection', function (socket) {
 var intervalDefaultUpdate = setInterval(function () {
 //var intervalDefaultUpdate = setTimeout(function () {
     console.log('defaultUpdate');
-    console.log(allBuses);
+    //console.log(allBuses);
     //console.log(allBuses);
 
-    allBuses.forEach(function (bus_code) {
-        console.log('Code: ' + bus_code);
-        var routeDataProm = Model.getRoutes(bus_code);
+    allBuses.forEach(function (route_code) {
+        var routeDataProm = Model.getRoutes(route_code);
 
         routeDataProm.then(function (response) {
                 var content = response.getBody();
@@ -121,11 +120,9 @@ var intervalDefaultUpdate = setInterval(function () {
                 for (var socket_id in socketDataClients) {
                     var array_buses = socketDataClients[socket_id];
 
-                    if (array_buses.indexOf(bus_code) > -1) {
+                    if (array_buses.indexOf(route_code) > -1) {
                         console.log('909');
-                        app.io.sockets.sockets[socket_id].emit('defaultUpdate', routeData);
-                    } else {
-                        app.io.sockets.sockets[socket_id].emit('defaultUpdate', []);
+                        app.io.sockets.sockets[socket_id].emit('defaultUpdate', routeData, route_code);
                     }
                 }
 

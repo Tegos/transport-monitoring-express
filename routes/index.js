@@ -1,13 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var requestify = require('requestify');
 var config = require('../config');
 
 var Model = require('../models/model');
 
-var register = require('./register');
 
-/* GET users listing. */
+/* about page. */
 router.get('/about', function (req, res, next) {
     res.render('test',
         {test: 909, title: 'test'}
@@ -16,7 +14,7 @@ router.get('/about', function (req, res, next) {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    var view_data = {title: 'ExpressRouteMap Lviv'};
+    var view_data = {title: 'LvivTransportMonitoringExpress'};
 
     var buses = Model.getBuses();
 
@@ -46,12 +44,7 @@ router.get('/json', function (req, res, next) {
         }
     );
 
-    console.log(buses);
-
 });
-
-
-router.get('/register', register);
 
 
 module.exports = router;
