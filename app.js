@@ -41,20 +41,20 @@ app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+	// render the error page
+	res.status(err.status || 500);
+	res.render('error');
 });
 
 var socketDataClients = [];
@@ -63,73 +63,73 @@ var allClients = [];
 
 //start listen with socket.io
 app.io.on('connection', function (socket) {
-    socketDataClients[socket.id] = [];
+	socketDataClients[socket.id] = [];
 
-    // add bus
-    socket.on('add-bus', function (route_id) {
-        console.log('add-bus');
-        allBuses.push(route_id);
-        allBuses = uniqueArray(allBuses);
+	// add bus
+	socket.on('add-bus', function (route_id) {
+		console.log('add-bus');
+		allBuses.push(route_id);
+		allBuses = uniqueArray(allBuses);
 
-        socketDataClients[socket.id].push(route_id);
-        socketDataClients[socket.id] = uniqueArray(socketDataClients[socket.id]);
+		socketDataClients[socket.id].push(route_id);
+		socketDataClients[socket.id] = uniqueArray(socketDataClients[socket.id]);
 
-        var routePathPromise = Model.getPathData(route_id);
+		var routePathPromise = Model.getPathData(route_id);
 
-        routePathPromise.then(function (response) {
+		routePathPromise.then(function (response) {
 
-                var content = response.getBody();
-                var routePathData = JSON.parse(content);
-                var data = {path: routePathData, code: route_id};
-                app.io.sockets.sockets[socket.id].emit('drawRoute', data);
-            }
-        );
-    });
+				var content = response.getBody();
+				var routePathData = JSON.parse(content);
+				var data = {path: routePathData, code: route_id};
+				app.io.sockets.sockets[socket.id].emit('drawRoute', data);
+			}
+		);
+	});
 
-    // remove bus
-    socket.on('remove-bus', function (bus_id) {
-        console.log('remove-bus');
+	// remove bus
+	socket.on('remove-bus', function (bus_id) {
+		console.log('remove-bus');
 
-        var socket_buses = socketDataClients[socket.id];
-        socket_buses = socket_buses.filter(function (item) {
-            return item !== bus_id;
-        });
+		var socket_buses = socketDataClients[socket.id];
+		socket_buses = socket_buses.filter(function (item) {
+			return item !== bus_id;
+		});
 
-        socketDataClients[socket.id] = socket_buses;
-    });
+		socketDataClients[socket.id] = socket_buses;
+	});
 
-    // disconnect
-    socket.on('disconnect', function () {
-        delete socketDataClients[socket.id];
-    });
+	// disconnect
+	socket.on('disconnect', function () {
+		delete socketDataClients[socket.id];
+	});
 
 });
 
 // defaultUpdate every time
 var intervalDefaultUpdate = setInterval(function () {
 //var intervalDefaultUpdate = setTimeout(function () {
-    console.log('defaultUpdate');
-    //console.log(allBuses);
+	console.log('defaultUpdate');
+	//console.log(allBuses);
 
-    allBuses.forEach(function (route_code) {
-        var routeDataProm = Model.getRoutes(route_code);
+	allBuses.forEach(function (route_code) {
+		var routeDataProm = Model.getRoutes(route_code);
 
-        routeDataProm.then(function (response) {
-                var content = response.getBody();
-                var routeData = JSON.parse(content);
+		routeDataProm.then(function (response) {
+				var content = response.getBody();
+				var routeData = JSON.parse(content);
 
-                for (var socket_id in socketDataClients) {
-                    var array_buses = socketDataClients[socket_id];
+				for (var socket_id in socketDataClients) {
+					var array_buses = socketDataClients[socket_id];
 
-                    if (array_buses.indexOf(route_code) > -1) {
-                        app.io.sockets.sockets[socket_id].emit('defaultUpdate', routeData, route_code);
-                    }
-                }
-            }
-        );
-    });
+					if (array_buses.indexOf(route_code) > -1) {
+						app.io.sockets.sockets[socket_id].emit('defaultUpdate', routeData, route_code);
+					}
+				}
+			}
+		);
+	});
 
-    //console.log(socketDataClients);
+	//console.log(socketDataClients);
 
 
 }, app.config.get('defaultUpdate'));
@@ -141,16 +141,16 @@ module.exports = app;
 // check if an element exists in array using a comparer function
 // comparer : function(currentElement)
 Array.prototype.inArray = function (comparer) {
-    for (var i = 0; i < this.length; i++) {
-        if (comparer(this[i])) return true;
-    }
-    return false;
+	for (var i = 0; i < this.length; i++) {
+		if (comparer(this[i])) return true;
+	}
+	return false;
 };
 
 // adds an element to the array if it does not already exist using a comparer
 // function
 Array.prototype.pushIfNotExist = function (element, comparer) {
-    if (!this.inArray(comparer)) {
-        this.push(element);
-    }
+	if (!this.inArray(comparer)) {
+		this.push(element);
+	}
 };
