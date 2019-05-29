@@ -45,10 +45,7 @@ jspm_packages
 *.tgz
 
 # Yarn Integrity file
-.yarn-integrity
-
 
 .idea/
-node_modules/
 
-
+yarn.lock

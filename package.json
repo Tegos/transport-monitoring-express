@@ -1,5 +1,5 @@
 {
-  "name": "LvivTransportMonitoringExpress",
+  "name": "lviv-transport-monitoring-express",
   "version": "0.0.2",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
     "ejs": "~2.5.5",
     "express": "~4.14.1",
     "hammerjs": "^2.0.8",
-    "morgan": "~1.7.0",
+    "morgan": "latest",
     "nconf": "latest",
     "node-uuid": "latest",
     "request": "^2.81.0",
