@@ -7,20 +7,20 @@
   },
   "dependencies": {
     "array-unique": "^0.3.2",
-    "async": "latest",
+    "async": "^3.2.0",
     "body-parser": "~1.16.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.0",
     "ejs": "~2.5.5",
     "express": "~4.14.1",
     "hammerjs": "^2.0.8",
-    "morgan": "latest",
-    "nconf": "latest",
+    "morgan": "^1.10.0",
+    "nconf": "^0.11.2",
     "node-uuid": "latest",
     "request": "^2.81.0",
     "requestify": "^0.2.5",
     "serve-favicon": "~2.3.2",
-    "validator": "latest",
-    "socket.io": "^2"
+    "socket.io": "^2",
+    "validator": "latest"
   }
 }
