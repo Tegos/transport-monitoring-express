@@ -1,10 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var config = require('../config');
+const express = require('express');
+const router = express.Router();
 
-var Model = require('../models/model');
-
-
+const model = require('../models/model');
 
 /* about page. */
 router.get('/about', function (req, res, next) {
@@ -13,12 +10,11 @@ router.get('/about', function (req, res, next) {
     );
 });
 
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
     var view_data = {title: 'LvivTransportMonitoringExpress'};
 
-    var buses = Model.getBuses();
+    var buses = model.getBuses();
 
     buses.then(function (response) {
             var content = response.getBody();
@@ -32,13 +28,21 @@ router.get('/', function (req, res, next) {
 
             view_data.stops = stops;
 
-
-            res.render('pages/index',
+            return res.render('pages/index',
                 view_data
             );
+        }, function (error) {
+            let errorMessage = "Request Failed";
+            if (error.code && error.body) {
+                errorMessage += " - " + error.code + ": " + error.body
+            }
+
+            console.log(error);
+            return res.status(400).send({
+                message: errorMessage
+            });
         }
     );
-
 
 });
 
@@ -46,7 +50,7 @@ router.get('/', function (req, res, next) {
 router.get('/json', function (req, res, next) {
     console.log('get json');
 
-    var buses = Model.getBuses();
+    var buses = model.getBuses();
 
     buses.then(function (response) {
             var content = response.getBody();
@@ -56,6 +60,5 @@ router.get('/json', function (req, res, next) {
     );
 
 });
-
 
 module.exports = router;

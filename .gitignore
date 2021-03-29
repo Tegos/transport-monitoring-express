@@ -47,5 +47,3 @@ jspm_packages
 # Yarn Integrity file
 
 .idea/
-
-yarn.lock
